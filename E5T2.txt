@@ -1,0 +1,27 @@
+Task 2 - Tools and Documentation
+--------------------------------
+
+1. Identify tools that will allow you to do the following: 
+a. Scan infrastructure as code templates. 
+b. Scan AMI’s or containers for OS vulnerabilities. 
+c. Scan an AWS environment for cloud configuration vulnerabilities.
+
+2. For each tool - identify an example compliance violation or vulnerability which it might expose.
+
+----
+
+Please find the answer to the above questions are as follows:
+
+The pipeline diagram show the flow of deployment stages using Jenkins which includes security implementation too. In this pipeline, I am deploying the application as docker containers into AWS ECS (Elastic container service). 
+
+In the pipeline, I have used Regula (security and compliance tool for Terraform) to do static code analysis for the terraform templates. Regula will check if there is any potentially insecure configurations or any vulnerabilities available in the code (IAAC). We could add more rules or complaince controls in the regula to do the check according to our requirements.
+
+For example: When creating AWS S3 buckets, we should provide proper iam_policy to restict the access to the files whoever is required. If the access permission are not given properly, then the data will be availavle to outside world. In this case we can use Regula to check if the bucket policy is properly provided or not.
+
+Regardinng container security, I have used Anchore Engine which is an open-source project that provides a centralized service for inspection, analysis, and certification of container images. For example: Using encore, we can check if the image has any know CVE vulnerabilities. We could also add custom security policies and evaluate the images.
+
+At the end after the deployment of the application into AWS ECS, I am using AWS config to check the cloud configuration vulnerabilities. For Example: sometimes in the security groups on the ECS ec2 instances, port 22 could be open to public which is not a good practice. Then, I could also check the iam role attached to the ECS ec2 instance as instance profile and review the permissions granted.
+
+
+
+
