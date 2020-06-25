@@ -1,0 +1,7 @@
+Question: Research the AWS Guard Duty documentation page and explain how GuardDuty may have detected this attack - i.e. what was its source of information?
+
+Looking at the AWS docs, GuardDuty uses CloudTrail event logs, VPC flow logs and DNS logs as the soure of information. When the ec2 instances are configured with default AWS DNS resolvers, then AWS GuardDuty service can access and process the request and response of DNS logs through the internal AWS DNS resolvers. Therefore, in this case it uses DNS logs as the source of information to do the findings.
+
+Refernce Links:
+----------------
+[1] https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_data-sources.html

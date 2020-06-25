@@ -1,0 +1,53 @@
+####Solution from Sabeer.
+-------------------------
+Based on the architecture diagram, and the steps you have taken so far to upload data and access the application web service, identify at least 2 obvious poor practices as it relates to security.  Include justification.
+
+# Poor practice 1
+------------------
+Looking at the EC2 instance "RecipeWebServiceInstance", the cloud instance has been launched in the public subnet "10.192.10.0/24" is a bad practice. This will expose the application server to outside world. Further looking at the security group "WebAppSG", I see many ports are open to public. And again port like 22 which need resticted access to admin users is open to whole world. This is not a good practice. 
+
+The best design practice will be to bring the EC2 application server in the private subnet and make sure that the application loadbalancer is able to access the ec2 application sever and listen to application port. The public access to the application would be via Application loadbalancer. This will prevent all the unwanted access from the internet to the EC2 application server. 
+
+Suppose, developers need SSH into this application server for any troubleshooting purpose or other activites, then we could use a bastion host which will be placed in the public subnet and SSH into the application server in the private subnet. In the security group "WebAppSG", we need to allow port 22 to the private address instead of allowing to whole world.   
+
+# Poor practice 2
+------------------
+The EC2 application server (Web Service Instance - C3) has provided with IAM instance role to access the S3 buckets like "cand-c3-free-recipes-796514743937". This is a good practice to provide ec2 instance role instead of provided access to IAM users. However, looking at the policy given in the role "c3-app-InstanceRole-PXFYI8OL0SUL", it will provide access to all s3 buckets from the application server which is a poor practice. The good design pratice would be allow access to the buckets which is required only.  
+
+
+The IAM policy found in the IAM ROLE (instance-profile/c3-app-InstanceProfileRole)
+-------------------------------------------------------------------------------------
+
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": "s3:*",
+            "Resource": "*",
+            "Effect": "Allow"
+        }
+    ]
+}    
+
+For Example: Find the policy to access s3 bucket "cand-c3-free-recipes-796514743937" only and with limited permissions
+----------------------------------------------------------------------------------------------------------------------
+
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "s3:GetAccessPoint",
+                "s3:PutAccountPublicAccessBlock",
+                "s3:GetAccountPublicAccessBlock",
+                "s3:ListAllMyBuckets",
+                "s3:ListAccessPoints",
+                "s3:ListJobs",
+                "s3:CreateJob",
+                "s3:HeadBucket"
+            ],
+            "Resource": "arn:aws:s3:::cand-c3-free-recipes-796514743937",
+            "Effect": "Allow"
+        }
+    ]
+}
+

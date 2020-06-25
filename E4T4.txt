@@ -1,0 +1,21 @@
+1. What additional architectural change can be made to reduce the internet-facing attack surface of the web application instance.
+- launch web application instance in the private subnet
+- Instead of single instance, we can configure auto-scaling for high-availibilty of the application.
+- We can configure AWS WAF (web application firewall) infront of Applicaiton loadbalancer
+
+2. Assuming the IAM permissions for the S3 bucket are still insecure, would creating VPC private endpoints for S3 
+prevent the unauthorized access to the secrets bucket.
+Yes, thats true. Access data over VPC endpoints will be more secure.
+
+3. Will applying default encryption setting to the s3 buckets encrypt the data that already exists?
+A. Enabling default encryption doesn't change the encryption of objects that are already in the bucket. After enabling the default encryption, the encryption applies only to future uploads. To change the encryption of an existing object, we need to re-upload the object.
+
+
+4. The changes you made above were done through the console or CLI; describe the outcome if the original 
+cloud formation templates are applied to this environment?
+A. I have made the changes via console. To answer to the second question, i understand all the changes that i did manually will be reverted when the original cloud formation templates are again applied. Because, cloud formation templates maintain the state of the AWS resources that are creadted and manual changes are not updated to the cfn service. Therefore, all the manual changes will be removed.
+
+
+
+
+

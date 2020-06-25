@@ -1,0 +1,19 @@
+Question: As a Cloud Architect, you have been asked to apply security best practices to the environment so that it can withstand attacks and be more secure.
+
+Regarding to prevent SSH brute force attack from the internet, we should restict the access from the internet to the ec2 instances. Looking at the security group "WebAppSG", the port 22 is open to the whole world. The good design would be use baiston host in the public subnet and keep the web server in the private subnet. Otherwise, we could open admin ports like 22 to a single public IP which is pointing to our ISP provider. This will reduce the surface area of the attack.
+
+Present security-group rule given for port 22:
+----------------------------------------------
+SSH	TCP	22	0.0.0.0/0	-
+
+For example: Providing SSH access to a single public IP:
+-------------------------------------------------------
+SSH	TCP	22	183.82.181.132/32
+
+Another method to prevent SSH attacks would be to use OS firewall iptables. 
+
+I'd also suggest to implement logging and monitoring to the web traffic. The visual graphs are easy to notice the sudden or unexpected traffic spikes in the network or the server. We can also do web log analysis to identify the bruteforce attack and automate the blocking of such IPs using shell/python scripts.
+
+
+
+
