@@ -1,2 +1,2 @@
 # proj-security
-Udacity 
+Udacity: Securing the Recipe Vault Web Application
