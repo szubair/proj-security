@@ -1,0 +1,25 @@
+Task 2: Identify and Triage Vulnerabilities
+---------------------------------------------
+
+I had a closer look into the findings provided by AWS Security Hub as well as AWS Inspector, there are couple of critical issues on the security groups. According to CIS AWS foundations benchmark control, the issues(HIGH) they have mentioned are as follows:
+
+EC2 Security Groups:
+--------------------
+1. Ensure no security groups allow ingress from 0.0.0.0/0 to port 22
+2. Ensure no security groups allow ingress from 0.0.0.0/0 to port 3389  
+
+Looking at the security group 'sg-0a9210e8cc96fdfd4', incoming traffic on port 22 is opened to whole world which provides access to the ec2 instance on port 22 from outside world. I understand, there are many hackers and vulernalble softwares which will try to hit hard to access these instances (ddos attacks) on these well known ports like 22. The best practice would be to restrict the access to outside world and keep the admin ports like 22 open to admin users only. Therefore, in order to mitigate the risk I'd highly recommned to keep port number 22 to yourself or admin users only.
+For Example: SSH	TCP	22	my_public_ip/32	SSH from the Internet
+
+Again looking at 'sg-0fbd6816e9afc9cc3', there is an incoming traffic rule to allow all ports from outside world which will allow access to RDP port 3389 from public. In the AWS Security Hub, there is a rule 'securityhub-restricted-rdp-becebdd6' to check whether the incoming RDP traffic is Allowed from 0.0.0.0/0 or not. This rule will complain if the RDP port 3389 is able to access from whole world i.e 0.0.0.0/0 which is not a good pratice and dangerous too. This is again the best practice would be to restrict the access to outside world and keep the port 3389 open to admin users only. Therefore, in order to mitigate the risk and clear this compliance failure I'd highly recommned to fo the following steps:
+1. Remove the ingress rules which allow all traffic on all ports from whole world.
+2. Allow access to port number 3389 to yourself or admin users only.
+
+AWS CloudTrail service:
+------------------------
+Then, further looking at cloudtrail service, it's not enabled for all regions and that's also doesn't meet the standard based on CIS AWS foundations benchmark control. The AWS cloudtrail is a service that enables governance, compliance, operational auditing, and risk auditing of the AWS account. With CloudTrail, we could log, continuously monitor, and retain account activity related to actions across the AWS infrastructure. In addition, you can use CloudTrail to detect unusual activity in the AWS accounts. These capabilities help simplify operational analysis and troubleshooting. Therefore, I'd highly recommend that we could enable cloudtrail service on all regions.
+
+
+
+
+
